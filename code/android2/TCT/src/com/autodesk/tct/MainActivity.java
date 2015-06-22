@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.autodesk.tct.com.autodesk.tct.authentication.AuthenticationUtil;
 import com.autodesk.tct.com.autodesk.tct.authentication.LoginFragment;
+import com.autodesk.tct.notification.NotificationManager;
 
 
 public class MainActivity extends Activity {
@@ -18,5 +19,7 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new LoginFragment())
                     .commit();
         }
+
+        NotificationManager.getInstance().initialize(this);
     }
 }
