@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme_highlight_color">#FF86C48C</color>
+    <color name="theme_topbar_icon_color">#FFC2B59B</color>
+    <color name="theme_topbar_bg_color">#FF200618</color>
+    <color name="theme_bottombar_bg_color">#FF918B7D</color>
+    <color name="theme_action_button_bg_color">#FFCEBF6B</color>
+    <color name="theme_listitem_shadow_color">#FF9B9280</color>
+    <color name="theme_listitem_light_color">#FFF1F2F2</color>
+     
+    
+    <color name="login_background_color">#FF069C88</color>
+    <color name="login_text_color">#FFFFFFFF</color>
+</resources>
