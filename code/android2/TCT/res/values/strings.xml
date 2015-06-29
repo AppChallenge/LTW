@@ -2,11 +2,19 @@
     <string name="app_name">TCT</string>
     <string name="title_activity_main">MainActivity</string>
     <!-- login ui -->
+    <string name="actionbar_title_signup">Sign up</string>
+    <string name="action_bar_title_signin">Sign in</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
-    <string name="sign_in">Sign In</string>
-    <string name="login_succeeded">Sign in succeeded!</string>
-    <string name="login_failed">Sign in failed!</string>
+    <string name="hint_confim_password">Password</string>
+    <string name="button_sign_up">Sign up</string>
+    <string name="button_sign_in">Sign in</string>
+    <string name="switch_to_sign_up">Not User? Sign up first!</string>
+    <string name="switch_to_sign_in">Already registered? Sign in!</string>
+    <string name="invalid_email_address">Invalid Email Address!</string>
+    <string name="login_error_input">Please make sure all information is right!</string>
+    <string name="login_failed">Sign in failed, please make sure that your email and password is correct!</string>
+    
 
 
 </resources>

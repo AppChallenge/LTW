@@ -2,7 +2,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/theme_highlight_color" >
+    android:background="@color/color_text_primary" >
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
