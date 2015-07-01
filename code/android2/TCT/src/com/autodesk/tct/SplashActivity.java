@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.autodesk.tct.server.ServerUtil;
 import com.autodesk.tct.server.ServerUtil.SignHandler;
 
 public class SplashActivity extends Activity implements SignHandler {
@@ -15,18 +16,8 @@ public class SplashActivity extends Activity implements SignHandler {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // ServerUtil.initialize(this);
-        // ServerUtil.setSignHandler(this);
-
-        // hard code here to test
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(mainIntent);
-                finish();
-            }
-        }, SPLASH_DISPLAY_LENGTH);
+        ServerUtil.setSignHandler(this);
+        ServerUtil.initialize(this);
     }
 
     @Override

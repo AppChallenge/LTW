@@ -147,11 +147,11 @@ public class ServerUtil {
 	 * TODO: not test
 	 */
 	public static void fetchUser(String userId, String token, final boolean userTrigger) {
-		String url = getServerUrl() + "users/" + sUser.getId() + "?access_token=" + token;
-		post(url, null, new JsonHttpResponseHandler() {
+        String url = getServerUrl() + "/users/" + sUser.getId() + "?access_token=" + token;
+        get(sApplicationContext, url, null, null, new JsonHttpResponseHandler() {
+
 			@Override
-			public void onSuccess(int statusCode, Header[] headers,
-					JSONObject response) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				if (response == null) {
 					onSignFailed();
 					return;
@@ -168,6 +168,17 @@ public class ServerUtil {
 					Throwable throwable, JSONObject error) {
 				onSignFailed();
 			}
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onSignFailed();
+            }
+
+            @Override
+            public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.Throwable throwable,
+                    org.json.JSONArray errorResponse) {
+                onSignFailed();
+            }
 		});
 	}
 		
