@@ -53,6 +53,21 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".BrownbagDetailActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+        
+        <receiver
+            android:name=".notification.PushNotificationReceiver"
+            android:exported="false" >
+            <intent-filter>
+
+                <!-- 替换为action android:name="com.igexin.sdk.action.第三方应用APPID" -->
+                <action android:name="com.igexin.sdk.action.UfKhp63nHO9Hz79xPaVsO7" />
+            </intent-filter>
+        </receiver>
 
         <!-- GeTui Notification settings -->
         <meta-data
