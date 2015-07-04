@@ -6,6 +6,7 @@ import org.apache.http.Header;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.autodesk.tct.authentication.User;
 import com.autodesk.tct.storage.PreferencesUtil;
@@ -141,6 +142,33 @@ public class ServerUtil {
             public void onSuccess(int statusCode, org.apache.http.Header[] headers, JSONObject response) {
             }
         });
+	}
+	
+	public static void getBrownbagDetail(String brownbagId){
+		String url = getServerUrl() + "/board-brownbags/get-brownbag-by-id?id=" + brownbagId;
+		get(sApplicationContext, url, null, null, new JsonHttpResponseHandler() {
+			@Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				Log.d("TCT", "getBrownbagDetail success!");
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject error) {
+				Log.d("TCT", "getBrownbagDetail fail!");
+			}
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            	Log.d("TCT", "getBrownbagDetail fail!");
+            }
+
+            @Override
+            public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.Throwable throwable,
+                    org.json.JSONArray errorResponse) {
+            	Log.d("TCT", "getBrownbagDetail fail!");
+            }
+		});
 	}
 	
 	/**
