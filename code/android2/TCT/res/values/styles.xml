@@ -17,5 +17,9 @@
     <style name="ThemeOverlay.MyApp.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/color_text_primary</item>
     </style>
+    
+    <style name="Widget.MyApp.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabBackground">@drawable/tabview_bg</item>
+    </style>
 
 </resources>

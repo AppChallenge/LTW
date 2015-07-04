@@ -15,6 +15,8 @@
     <string name="login_error_input">Please make sure all information is right!</string>
     <string name="login_failed">Sign in failed, please make sure that your email and password is correct!</string>
     
-
+	<string name="category_brownbag">Brown bag</string>
+	<string name="category_training">Training information</string>
+	<string name="category_others">Others</string>
 
 </resources>

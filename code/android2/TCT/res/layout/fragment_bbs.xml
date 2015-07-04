@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"  
+    android:background="#FFFFF0FF" >
+    <LinearLayout
+        android:id="@+id/brownbag"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical">
+    	<TextView
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_marginBottom="@dimen/category_cube_title_margin"
+    	    android:text="@string/category_brownbag" />
+    	<ImageView 
+    	    android:layout_width="@dimen/category_cube_width"
+    	    android:layout_height="@dimen/category_cube_width"
+    	    android:src="@drawable/register_button_bg"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/training"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical">
+    	<TextView
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_marginBottom="@dimen/category_cube_title_margin"
+    	    android:text="@string/category_brownbag" />
+    	<ImageView 
+    	    android:layout_width="@dimen/category_cube_width"
+    	    android:layout_height="@dimen/category_cube_width"
+    	    android:src="@drawable/register_button_bg"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/others"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical">
+    	<TextView
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_marginBottom="@dimen/category_cube_title_margin"
+    	    android:text="@string/category_brownbag" />
+    	<ImageView 
+    	    android:layout_width="@dimen/category_cube_width"
+    	    android:layout_height="@dimen/category_cube_width"
+    	    android:src="@drawable/register_button_bg"/>
+    </LinearLayout>
+    
+</LinearLayout>
