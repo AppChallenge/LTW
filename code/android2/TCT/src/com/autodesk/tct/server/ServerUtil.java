@@ -32,6 +32,11 @@ public class ServerUtil {
 		void onBrownbagDetailReceivedFailed();
 	}
 	
+	public interface BrownbagRegisterResponseHandler{
+		void onBrownbagRegisterResponseSucceed(String brownbagId);
+		void onBrownbagRegisterResponseFailed();
+	}
+	
 	private final static long ONE_WEEK_IN_MILLIS = 7 * 24 * 60 * 60 * 1000;
 	private final static String SERVER_URL = "http://iratao-pretzel.daoapp.io:80/api";
 
@@ -43,6 +48,7 @@ public class ServerUtil {
 	
 	private static SignHandler sSignHandler;
 	private static BrownbagDetailResponseHandler sBrownbagDetailResponseHandler;
+	private static BrownbagRegisterResponseHandler sBrownbagRegisterResponseHandler;
 	
 	public static void initialize(Context context) {
 		sApplicationContext = context.getApplicationContext();
@@ -55,6 +61,10 @@ public class ServerUtil {
 	
 	public static void setBrownbagDetailResponseHandler(BrownbagDetailResponseHandler handler){
 		sBrownbagDetailResponseHandler = handler;
+	}
+	
+	public static void setBrownbagRegisterResponseHander(BrownbagRegisterResponseHandler handler){
+		sBrownbagRegisterResponseHandler = handler;
 	}
 	
 	private static void checkUserValidation(Context context) {
@@ -157,6 +167,47 @@ public class ServerUtil {
             public void onSuccess(int statusCode, org.apache.http.Header[] headers, JSONObject response) {
             }
         });
+	}
+	
+	public static void registerBrownbag(String brownbagId){
+		String url = getServerUrl() + "/brownbag-registrations/register-brownbags?access_token=" + sSessionToken;
+		RequestParams params = new RequestParams();
+		params.put("brownbagId", brownbagId);
+		params.put("userId", sUser.getId());
+		post(url, params, new JsonHttpResponseHandler() {
+			@Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				Log.d("TCT", "registerBrownbag return success!");
+				
+				if (response != null) {
+					if(response.optBoolean("success")){
+						onBrownbagRegisterResponseSucceeded("0");
+					}
+				}else{
+					onBrownbagRegisterResponseFailed();
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject error) {
+				Log.d("TCT", "registerBrownbag fail!");
+				onBrownbagRegisterResponseFailed();
+			}
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            	Log.d("TCT", "registerBrownbag fail!");
+            	onBrownbagRegisterResponseFailed();
+            }
+
+            @Override
+            public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.Throwable throwable,
+                    org.json.JSONArray errorResponse) {
+            	Log.d("TCT", "registerBrownbag fail!");
+            	onBrownbagRegisterResponseFailed();
+            }
+		});
 	}
 	
 	public static void getBrownbagDetail(String brownbagId){
@@ -290,6 +341,18 @@ public class ServerUtil {
     private static void onBrownbagDetailReceivedFailed(){
     	if(sBrownbagDetailResponseHandler != null){
     		sBrownbagDetailResponseHandler.onBrownbagDetailReceivedFailed();
+    	}
+    }
+    
+    private static void onBrownbagRegisterResponseFailed(){
+    	if(sBrownbagRegisterResponseHandler != null){
+    		sBrownbagRegisterResponseHandler.onBrownbagRegisterResponseFailed();
+    	}
+    }
+    
+    private static void onBrownbagRegisterResponseSucceeded(String brownbagId){
+    	if(sBrownbagRegisterResponseHandler != null){
+    		sBrownbagRegisterResponseHandler.onBrownbagRegisterResponseSucceed(brownbagId);
     	}
     }
     
