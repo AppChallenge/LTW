@@ -42,6 +42,7 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.action_bar_title_brownbag);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         initializeViews();
 

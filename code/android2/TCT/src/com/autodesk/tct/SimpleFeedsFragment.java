@@ -1,8 +1,8 @@
+
 package com.autodesk.tct;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.AppCompatActivity;
@@ -17,16 +17,15 @@ import com.autodesk.tct.brownbag.BrownBag;
 import com.autodesk.tct.brownbag.BrownBagManager;
 import com.autodesk.tct.brownbag.BrownBagManager.BrownBagsDownloadListener;
 
-public class SimpleFeedsFragment extends Fragment implements BrownBagsDownloadListener, OnItemClickListener {
+public class SimpleFeedsFragment extends BaseFragment implements BrownBagsDownloadListener, OnItemClickListener {
     private static final String TAG = "Feeds";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private SimpleBrownBagAdapter mAdapter;
 
-
     public SimpleFeedsFragment() {
-	}
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,12 +49,14 @@ public class SimpleFeedsFragment extends Fragment implements BrownBagsDownloadLi
         return rootView;
     }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		// this is really important in order to save the state across screen
-		// configuration changes for example
-		setRetainInstance(true);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // this is really important in order to save the state across screen
+        // configuration changes for example
+        setRetainInstance(true);
+
+        // Set toolbar title
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.actionbar_title_feeds);
 
         mAdapter = new SimpleBrownBagAdapter();
@@ -69,7 +70,20 @@ public class SimpleFeedsFragment extends Fragment implements BrownBagsDownloadLi
 
         // initiate the loader to do the background work
         // getLoaderManager().initLoader(0, null, this);
-	}
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                BrownBagManager.getInstance().downloadBrownBags();
+            }
+        });
+    }
+
+    @Override
+    public void onFragmentResume() {
+        // Set toolbar title
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.actionbar_title_feeds);
+    }
 
     private void pullToRefresh() {
         BrownBagManager.getInstance().downloadBrownBags();

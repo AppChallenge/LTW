@@ -3,6 +3,7 @@ package com.autodesk.tct;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -36,6 +37,24 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mFragmentPagerAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
+
+            @Override
+            public void onPageSelected(int arg0) {
+                int position = mViewPager.getCurrentItem();
+                BaseFragment currFrag = (BaseFragment) mFragmentPagerAdapter.getItem(position);
+                currFrag.onFragmentResume();
+            }
+
+        });
 
         mTabsView = (TabLayout) findViewById(R.id.tabs);
         mTabsView.setupWithViewPager(mViewPager);
@@ -43,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < mFragmentPagerAdapter.getCount(); i++) {
             mTabsView.getTabAt(i).setCustomView(mFragmentPagerAdapter.getTabView(i));
         }
+
     }
 
 	@Override

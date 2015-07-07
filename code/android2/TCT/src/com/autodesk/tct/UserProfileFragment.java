@@ -1,7 +1,6 @@
 package com.autodesk.tct;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.widget.Toast;
 import com.autodesk.tct.authentication.User;
 import com.autodesk.tct.authentication.UserUtility;
 
-public class UserProfileFragment extends Fragment {
+public class UserProfileFragment extends BaseFragment {
 
     private static final String TAG = "UserProfile";
 
@@ -58,8 +57,11 @@ public class UserProfileFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		// this is really important in order to save the state across screen
 		// configuration changes for example
-		setRetainInstance(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.action_bar_title_userprofile);
+        setRetainInstance(true);
+    }
 
-	}
+    @Override
+    public void onFragmentResume() {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.action_bar_title_userprofile);
+    }
 }

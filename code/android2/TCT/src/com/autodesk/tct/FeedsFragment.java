@@ -4,7 +4,6 @@ import java.lang.ref.WeakReference;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.view.ViewGroup;
 import com.autodesk.tct.brownbag.BrownBagManager;
 import com.marshalchen.ultimaterecyclerview.CustomUltimateRecyclerview;
 
-public class FeedsFragment extends Fragment {
+public class FeedsFragment extends BaseFragment {
     private static final String TAG = "Feeds";
 
     private CustomUltimateRecyclerview mRecyclerView;
@@ -57,4 +56,10 @@ public class FeedsFragment extends Fragment {
 		// configuration changes for example
 		setRetainInstance(true);
 	}
+
+    @Override
+    public void onFragmentResume() {
+        // TODO Auto-generated method stub
+
+    }
 }

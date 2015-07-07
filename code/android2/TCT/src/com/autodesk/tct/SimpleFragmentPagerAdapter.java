@@ -10,13 +10,15 @@ import android.widget.ImageView;
 import com.autodesk.tct.authentication.UserUtility;
 
 public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
-    private final static int FEEDS_POSITION = 0;
-    private final static int BBS_POSITION = 1;
-    private final static int USERPROFILE_POSITION = 2;
     private final static int[] TAB_ICON_RESOUCE = {
             R.drawable.level_1_headline, R.drawable.level_1_bbsall, R.drawable.level_1_userprofile
     };
-    final int PAGE_COUNT = 3;
+    private final static BaseFragment[] FRAGMENTS = {
+            new SimpleFeedsFragment(),
+            new BBSFragment(),
+            new UserProfileFragment(UserUtility.getCurrentUser())
+            };
+
     private Context mContext;
 
     public SimpleFragmentPagerAdapter(FragmentManager fm, Context context) {
@@ -26,21 +28,12 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return PAGE_COUNT;
+        return FRAGMENTS.length;
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case FEEDS_POSITION:
-                return new SimpleFeedsFragment();
-            case BBS_POSITION:
-                return new BBSFragment();
-            case USERPROFILE_POSITION:
-                return new UserProfileFragment(UserUtility.getCurrentUser());
-        }
-
-        return null;
+        return FRAGMENTS[position];
     }
 
     // This method doesn't work.
