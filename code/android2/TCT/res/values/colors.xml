@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_primary">#FF180614</color>
-    <color name="color_primary_dark">#FF000000</color>
+    <color name="color_primary_dark">#FF120610</color>
     <color name="color_text_primary">#FF75BA79</color>
     <color name="color_window_background">#FFB5A789</color>
     <color name="theme_topbar_icon_color">#FFC2B59B</color>
