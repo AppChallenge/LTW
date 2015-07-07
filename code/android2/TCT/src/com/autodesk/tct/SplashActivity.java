@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.autodesk.tct.brownbag.BrownBag;
 import com.autodesk.tct.server.ServerUtil;
 import com.autodesk.tct.server.ServerUtil.SignHandler;
 
@@ -37,7 +38,7 @@ public class SplashActivity extends Activity implements SignHandler {
             public void run() {
             	if (wantToShowBBDetail){
             		Intent deatilIntent = new Intent(SplashActivity.this, BrownbagDetailActivity.class);
-            		deatilIntent.putExtra("BROWNBAG_ID", bbID);
+                    deatilIntent.putExtra(BrownBag.EXTRA_BROWNBAG_ID, bbID);
             		startActivity(deatilIntent);
             		setWantToShowBrownbagDetail(false);
             	}else{

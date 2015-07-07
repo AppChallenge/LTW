@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+ 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+    
+    <LinearLayout
+        android:id="@+id/brownbag_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/feeds_headerview_bg"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/list_header_padding"
+        android:paddingLeft="@dimen/list_header_padding"
+        android:paddingRight="@dimen/list_header_padding"
+        android:layout_marginTop="?attr/actionBarSize" >
+
+        <TextView
+            android:id="@+id/item_type"
+            style="@style/Feeds.Item.Title.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/list_item_divider_height"
+            android:background="#FF000000"
+            android:padding="8dp"
+            android:textColor="#FFFFFFFF" />
+
+        <TextView
+            android:id="@+id/item_title"
+            style="@style/Feeds.Item.Title.TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/brownbag_header" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/discussion_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

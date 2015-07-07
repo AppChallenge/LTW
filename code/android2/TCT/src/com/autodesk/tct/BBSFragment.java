@@ -24,7 +24,7 @@ public class BBSFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_bbs, container, false);
-        rootView.findViewById(R.id.brownbag).setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.ctgr_brownbag).setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -33,7 +33,7 @@ public class BBSFragment extends Fragment {
 
         });
 
-        rootView.findViewById(R.id.training).setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.ctgr_training).setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -42,7 +42,7 @@ public class BBSFragment extends Fragment {
 
         });
 
-        rootView.findViewById(R.id.others).setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.ctgr_other).setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -61,7 +61,7 @@ public class BBSFragment extends Fragment {
 		// configuration changes for example
 		setRetainInstance(true);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Category");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.action_bar_title_bbs);
 	}
 
 

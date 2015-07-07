@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.autodesk.tct.brownbag.BrownBagManager;
 import com.autodesk.tct.notification.NotificationManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,12 +21,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // set Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); 
         setSupportActionBar(toolbar);
+
         initializeTabViews();
 
         NotificationManager.getInstance().initialize(this);
+        BrownBagManager.getInstance().initialize(this);
     }
 
     private void initializeTabViews() {

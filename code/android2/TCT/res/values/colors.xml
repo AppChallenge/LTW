@@ -7,11 +7,17 @@
     <color name="theme_topbar_icon_color">#FFC2B59B</color>
     <color name="theme_bottombar_bg_color">#FF918B7D</color>
     <color name="theme_action_button_bg_color">#FFCEBF6B</color>
-    <color name="theme_listitem_shadow_color">#FF9B9280</color>
-    <color name="theme_listitem_light_color">#FFF1F2F2</color>
+    <color name="theme_listitem_shadow_color">#FF89806D</color>
+    <color name="theme_listitem_light_color">#FFEDEFEF</color>
      
     
     <color name="login_background_color">#FF98927F</color>
     <color name="login_edit_text_bg_error">#FFDDB6B7</color>
     <color name="login_text_color">#FF000000</color>
+    
+    <color name="feeds_item_title_color">#FF1A1718</color>
+    <color name="feeds_item_description_color">#FF464749</color>
+    
+    <color name="bb_detail_bg_color">#FFE2E0DA</color>
+    
 </resources>

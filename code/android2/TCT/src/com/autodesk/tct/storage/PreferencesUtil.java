@@ -10,7 +10,7 @@ public class PreferencesUtil {
 	
 	private final static String USER_ACCESS_TOKEN = "user.access.token";
 	private final static String USER_ID = "user.id";
-	private final static String USER_NAME = "user.name";
+    private final static String USER_EMAIL = "user.email";
 	private final static String USER_LOGIN_TIME = "user.login.time";
 	
 	
@@ -78,12 +78,12 @@ public class PreferencesUtil {
 		return getStringValue(context, USER_ID, null);
 	}
 	
-	public static void saveUserName(Context context, String name) {
-		saveStringValue(context, USER_NAME, name);
+    public static void saveUserEmail(Context context, String email) {
+        saveStringValue(context, USER_EMAIL, email);
 	}
 	
-	public static String getUserName(Context context) {
-		return getStringValue(context, USER_NAME, null);
+    public static String getUserEmail(Context context) {
+        return getStringValue(context, USER_EMAIL, null);
 	}
 	
 	public static void saveUserLoginTime(Context context, long loginTime) {

@@ -19,8 +19,33 @@
 	<string name="category_training">Training information</string>
 	<string name="category_others">Others</string>
 	
-	<string name="bb_title">Title</string>
-	<string name="bb_description">Description</string>
-	<string name="btn_register">Register</string>
+	<string name="feeds_empty">Nothing Get. Please pull to refresh.</string>
+	
+    <string name="actionbar_title_feeds">Chalk Board</string>
+    <string name="action_bar_title_bbs">Channel</string>
+    <string name="action_bar_title_userprofile">User Profile</string>
+    <string name="action_bar_title_brownbag">TCT Brown bag</string> 
+    <string name="action_bar_title_speaker">Speaker</string>
+    <string name="action_bar_title_dicussion">Discussion</string> 
+    
+    <string name="action_register">Register</string>
+    
+	<string name="bb_summary">Summary</string>
+	<string name="bb_speakers">Speakers:</string>
+	<string name="bb_materials">Materials</string>
+	<string name="bb_discussion">Discussion</string>
+	
+	<string name="isee">I see.</string>
+	<string name="addToMyCalender">Add to my calender</string>
+	<string name="msg_register_success">Thank you and Congrats !</string>
+	<string name="msg_register_waiting">You are on the waiting list now ! Good Luck!</string>
+	<string name="msg_register_failure">Something was wrong. Please try again later.</string>
+	
+	<!-- user profile -->
+	<string name="profile_follow">Follow me</string>
+    <string name="profile_unfollow">Unfollow</string>
+    <string name="profile_email_address">Email:</string>
+    <string name="profile_title">Title:</string>
+    <string name="profile_topic">Topics:</string>
 
 </resources>

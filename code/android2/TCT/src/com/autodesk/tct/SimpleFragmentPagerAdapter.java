@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.autodesk.tct.authentication.UserUtility;
+
 public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
     private final static int FEEDS_POSITION = 0;
     private final static int BBS_POSITION = 1;
@@ -31,11 +33,11 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case FEEDS_POSITION:
-                return new FeedsFragment();
+                return new SimpleFeedsFragment();
             case BBS_POSITION:
                 return new BBSFragment();
             case USERPROFILE_POSITION:
-                return new UserProfileFragment();
+                return new UserProfileFragment(UserUtility.getCurrentUser());
         }
 
         return null;

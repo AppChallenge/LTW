@@ -2,52 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"  
-    android:background="#FFFFF0FF" >
-    <LinearLayout
-        android:id="@+id/brownbag"
-        android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:orientation="vertical">
-    	<TextView
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:layout_marginBottom="@dimen/category_cube_title_margin"
-    	    android:text="@string/category_brownbag" />
-    	<ImageView 
-    	    android:layout_width="@dimen/category_cube_width"
-    	    android:layout_height="@dimen/category_cube_width"
-    	    android:src="@drawable/register_button_bg"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/training"
-        android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:orientation="vertical">
-    	<TextView
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:layout_marginBottom="@dimen/category_cube_title_margin"
-    	    android:text="@string/category_brownbag" />
-    	<ImageView 
-    	    android:layout_width="@dimen/category_cube_width"
-    	    android:layout_height="@dimen/category_cube_width"
-    	    android:src="@drawable/register_button_bg"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/others"
-        android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:orientation="vertical">
-    	<TextView
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:layout_marginBottom="@dimen/category_cube_title_margin"
-    	    android:text="@string/category_brownbag" />
-    	<ImageView 
-    	    android:layout_width="@dimen/category_cube_width"
-    	    android:layout_height="@dimen/category_cube_width"
-    	    android:src="@drawable/register_button_bg"/>
-    </LinearLayout>
-    
+    android:padding="20dp"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/ctgr_brownbag"
+        style="@style/Feeds.Item.Title.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/category_cube_title_margin"
+        android:layout_weight="1"
+        android:drawableBottom="@drawable/ctgr_bb"
+        android:gravity="center"
+        android:text="@string/category_brownbag" />
+
+    <TextView
+        android:id="@+id/ctgr_training"
+        style="@style/Feeds.Item.Title.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/category_cube_title_margin"
+        android:layout_weight="1"
+        android:drawableBottom="@drawable/ctgr_info"
+        android:gravity="center"
+        android:text="@string/category_training" />
+
+    <TextView
+        android:id="@+id/ctgr_other"
+        style="@style/Feeds.Item.Title.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/category_cube_title_margin"
+        android:layout_weight="1"
+        android:drawableBottom="@drawable/ctgr_other"
+        android:gravity="center"
+        android:text="@string/category_others" />
+
 </LinearLayout>
