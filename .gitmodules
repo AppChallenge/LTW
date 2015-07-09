@@ -1,6 +1,0 @@
-[submodule "code/android2/UltimateRecyclerView"]
-	path = code/android2/UltimateRecyclerView
-	url = git@github.com:cymcsg/UltimateRecyclerView.git
-[submodule "code/android2/android-Ultra-Pull-To-Refresh"]
-	path = code/android2/android-Ultra-Pull-To-Refresh
-	url = git@github.com:liaohuqiu/android-Ultra-Pull-To-Refresh.git
