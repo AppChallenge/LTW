@@ -1,30 +1,10 @@
 package com.autodesk.tct.server;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,8 +40,6 @@ public class ServerUtil {
 	private final static String SERVER_URL = "http://iratao-pretzel.daoapp.io:80/api";
 
     private final static AsyncHttpClient ASYNC_HTTP_CLIENT = new AsyncHttpClient();
-    @SuppressWarnings("deprecation")
-    private static DefaultHttpClient sHttpClient;
 	private static Context sApplicationContext;
 	
 
@@ -157,11 +135,11 @@ public class ServerUtil {
                 	onSignFailed();
                     return;
                 }
-				String sessionToken = response.optString("id");
-				PreferencesUtil.saveUserAccessToken(sApplicationContext, sessionToken);
+                sSessionToken = response.optString("id");
+                PreferencesUtil.saveUserAccessToken(sApplicationContext, sSessionToken);
 				String userId = response.optString("userId");
                 sUser = new User(userId, email);
-				fetchUser(userId, sessionToken, true);
+                fetchUser(userId, sSessionToken, true);
             }
 			
 			@Override
@@ -175,12 +153,13 @@ public class ServerUtil {
 	 * TODO: not test
 	 */
 	public static void signout() {
+        clearUserInfo();
+        sUser = null;
+
 		String url = getServerUrl() + "/logout";
 		delete(sApplicationContext, url, null, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, org.apache.http.Header[] headers, JSONObject response) {
-                sUser = null;
-                clearUserInfo();
             }
         });
 	}
@@ -283,7 +262,7 @@ public class ServerUtil {
 		});
 	}
 	
-	public static void fetchUser(String userId, String token, final boolean userTrigger) {
+    public static void fetchUser(String userId, final String token, final boolean userTrigger) {
         String url = getServerUrl() + "/users/" + sUser.getId() + "?access_token=" + token;
         get(sApplicationContext, url, null, null, new JsonHttpResponseHandler() {
 
@@ -317,27 +296,9 @@ public class ServerUtil {
 		});
 	}
 	
-    @SuppressWarnings("deprecation")
-    public static String downloadBrownbags() {
+    public static void downloadBrownbags(JsonHttpResponseHandler handler) {
         String url = getServerUrl() + "/board-brownbags/list-brownbags?access_token=" + sSessionToken;
-        HttpGet method = new HttpGet(url);
-        String resultStr = null;
-        try {
-            HttpResponse response = executeHttpRequest(method);
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == HttpStatus.SC_OK) {
-                HttpEntity entity = response.getEntity();
-                verifyContentType(sApplicationContext, method, entity);
-                resultStr = EntityUtils.toString(entity);
-            }
-        } catch (ClientProtocolException e) {
-            Log.w("downloadBrownbags", "Download manifest: " + e.toString());
-        } catch (IOException e) {
-            Log.w("downloadBrownbags", "Download manifest: " + e.toString());
-        } catch (RuntimeException e) {
-            Log.w("downloadBrownbags", "Download manifest: " + e.toString());
-        }
-        return resultStr;
+        get(sApplicationContext, url, null, null, handler);
     }
 
     public static void getBrownbagDiscussions(final String brownbagId, final DownloadBrownbagDiscussionHandler handler) {
@@ -517,56 +478,4 @@ public class ServerUtil {
     		sSignHandler.onSignFailed();
     	}
     }
-    
-    private static void verifyContentType(Context context, HttpGet method, HttpEntity entity) throws IOException {
-        if (entity == null) {
-            throw new IOException("Download failed");
-        } else {
-            Header header = entity.getContentType();
-            // Hack, if the type is html, we must have network issue like a network with browser log in.
-            if (header != null && !header.getValue().startsWith("text/html")) {
-                return;
-            }
-            method.abort();
-            throw new IOException("Download content is invalid");
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    public static HttpResponse executeHttpRequest(HttpUriRequest httpRequest) throws IOException {
-        HttpClient client = getHttpClient();
-        client.getConnectionManager().closeExpiredConnections();
-        return client.execute(httpRequest);
-    }
-
-    @SuppressWarnings("deprecation")
-    private synchronized static DefaultHttpClient getHttpClient() {
-        if (sHttpClient == null) {
-            sHttpClient = createHttpClient();
-        }
-        return sHttpClient;
-    }
-
-    @SuppressWarnings("deprecation")
-    private static DefaultHttpClient createHttpClient() {
-        HttpParams params = new BasicHttpParams();
-        // disable stale checking
-        HttpConnectionParams.setStaleCheckingEnabled(params, false);
-        HttpConnectionParams.setSoTimeout(params, 60000);
-
-        // disable redirect
-        HttpClientParams.setRedirecting(params, true);
-
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http",
-                PlainSocketFactory.getSocketFactory(), 80));
-        schemeRegistry.register(new Scheme("https",
-                SSLSocketFactory.getSocketFactory(), 443));
-
-        ClientConnectionManager manager =
-                new ThreadSafeClientConnManager(params, schemeRegistry);
-
-        return new DefaultHttpClient(manager, params);
-    }
-
 }

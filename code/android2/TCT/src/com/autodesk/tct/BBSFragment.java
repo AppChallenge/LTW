@@ -1,7 +1,6 @@
 package com.autodesk.tct;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,8 +63,7 @@ public class BBSFragment extends BaseFragment {
     @Override
     public void onFragmentResume() {
         // Set toolbar title
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.action_bar_title_bbs);
-
+        setActionBarTitle(R.string.action_bar_title_bbs);
     }
 
 }

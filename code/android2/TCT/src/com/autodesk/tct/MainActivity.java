@@ -4,15 +4,10 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.autodesk.tct.brownbag.BrownBagManager;
-import com.autodesk.tct.notification.NotificationManager;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private TabLayout mTabsView;
     private ViewPager mViewPager;
 
@@ -21,16 +16,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // set Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); 
-        setSupportActionBar(toolbar);
 
         initializeTabViews();
+    }
 
-        NotificationManager.getInstance().initialize(this);
-        BrownBagManager.getInstance().initialize(this);
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_main;
     }
 
     private void initializeTabViews() {

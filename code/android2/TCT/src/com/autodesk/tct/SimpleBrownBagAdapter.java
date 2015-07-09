@@ -41,7 +41,7 @@ public class SimpleBrownBagAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        if (position == mBrownBags.size() - 1) {
             return ITEM_VIEW_TYPE_HEADER;
         }
         return -1;

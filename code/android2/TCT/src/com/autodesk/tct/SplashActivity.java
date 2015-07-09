@@ -6,13 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.autodesk.tct.brownbag.BrownBag;
+import com.autodesk.tct.notification.NotificationManager;
 import com.autodesk.tct.server.ServerUtil;
 import com.autodesk.tct.server.ServerUtil.SignHandler;
 
 public class SplashActivity extends Activity implements SignHandler {
     private final int SPLASH_DISPLAY_LENGTH = 1000;
-    private static boolean wantToShowBBDetail = false;
-    private static String bbID = "";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,26 +20,21 @@ public class SplashActivity extends Activity implements SignHandler {
 
         ServerUtil.setSignHandler(this);
         ServerUtil.initialize(this);
-    }
-        
-    public static void setWantToShowBrownbagDetail(boolean show){
-    	wantToShowBBDetail = show;
+
+        NotificationManager.getInstance().initialize(this);
     }
     
-    public static void setBrownbagId(String id){
-    	bbID = id;
-    }
-
     @Override
     public void onSignSucceed(boolean userTrigger) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-            	if (wantToShowBBDetail){
+                if (NotificationManager.getInstance().wantToShowBrownbagDetail()) {
             		Intent deatilIntent = new Intent(SplashActivity.this, BrownbagDetailActivity.class);
-                    deatilIntent.putExtra(BrownBag.EXTRA_BROWNBAG_ID, bbID);
+                    deatilIntent.putExtra(BrownBag.EXTRA_BROWNBAG_ID, NotificationManager.getInstance()
+                            .getWantToShowBrownbagId());
             		startActivity(deatilIntent);
-            		setWantToShowBrownbagDetail(false);
+                    NotificationManager.getInstance().setWantToShowBrownbagDetail(false, "");
             	}else{
             		Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(mainIntent);

@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ import com.autodesk.tct.widget.CustomAlertDialog;
 import com.autodesk.tct.widget.CustomAlertDialog.AlertDialogListener;
 
 
-public class BrownbagDetailActivity extends AppCompatActivity implements BrownBagsDownloadListener,
+public class BrownbagDetailActivity extends BaseActivity implements BrownBagsDownloadListener,
         BrownbagRegisterHandler, BrownbagDetailResponseHandler {
     private String mBrownbagId;
     private BrownBag mBrownbag;
@@ -42,16 +43,12 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bb_detail);
 
-        // set Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        initializeViews();
+
         getSupportActionBar().setTitle(R.string.action_bar_title_brownbag);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        initializeViews();
 
         mBrownbagId = getIntent().getStringExtra(BrownBag.EXTRA_BROWNBAG_ID);
         BrownBag brownbag = BrownBagManager.getInstance().getBrownbagById(mBrownbagId);
@@ -59,11 +56,17 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
             setBrownBag(brownbag);
         } else {
             mProgressBar.setVisibility(View.VISIBLE);
+            BrownBagManager.getInstance().setOnBrownBagsDownloadListener(this);
             BrownBagManager.getInstance().downloadBrownBags();
-            BrownBagManager.getInstance().setBrownbagDetailResponseHandler(this);
-            BrownBagManager.getInstance().getBrownbagDetail(mBrownbagId);
+            // BrownBagManager.getInstance().setBrownbagDetailResponseHandler(this);
+            // BrownBagManager.getInstance().getBrownbagDetail(mBrownbagId);
         }
         BrownBagManager.getInstance().setBrownbagRegisterHander(this);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_bb_detail;
     }
 
     @Override
@@ -139,14 +142,56 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
         mSpeakersView.setText(mBrownbag.getSpeakersName());
         
         if (mBrownbag.isAllowToRegister()) {
-            mRegisterBtn.setVisibility(View.VISIBLE);
+            showRegisterButton();
         } else {
-            mRegisterBtn.setVisibility(View.GONE);
+            hideRegisterButton();
         }
     }
 
+    private void showRegisterButton() {
+        Animation fabIn = AnimationUtils.loadAnimation(this, R.anim.fab_in);
+        fabIn.setAnimationListener(new AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mRegisterBtn.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mRegisterBtn.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+            }
+
+        });
+        mRegisterBtn.startAnimation(fabIn);
+    }
+
     private void hideRegisterButton() {
-        mRegisterBtn.setVisibility(View.INVISIBLE);
+        Animation fabOut = AnimationUtils.loadAnimation(this, R.anim.fab_out);
+        fabOut.setAnimationListener(new AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mRegisterBtn.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+            }
+
+        });
+        mRegisterBtn.startAnimation(fabOut);
     }
 
     private void writeToCalendar() {
@@ -165,6 +210,11 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
     public void onAllBrownBagsDownloaded() {
         BrownBag brownbag = BrownBagManager.getInstance().getBrownbagById(mBrownbagId);
         setBrownBag(brownbag);
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onBrownBagsDownloadFailed() {
         mProgressBar.setVisibility(View.GONE);
     }
 

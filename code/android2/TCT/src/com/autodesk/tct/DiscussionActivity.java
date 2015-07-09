@@ -6,10 +6,8 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -22,7 +20,7 @@ import com.autodesk.tct.brownbag.BrownBagManager.BrownbagDiscussionPostHandler;
 import com.autodesk.tct.brownbag.BrownBagManager.DownloadBrownbagDiscussionHandler;
 import com.autodesk.tct.brownbag.Discussion;
 
-public class DiscussionActivity extends AppCompatActivity implements DownloadBrownbagDiscussionHandler,
+public class DiscussionActivity extends BaseActivity implements DownloadBrownbagDiscussionHandler,
         BrownbagDiscussionPostHandler {
     private static final String TAG = "DiscussionActivity";
 
@@ -39,17 +37,24 @@ public class DiscussionActivity extends AppCompatActivity implements DownloadBro
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_discussion);
-
-        // set Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.action_bar_title_dicussion);
 
         String brownbagId = getIntent().getStringExtra(BrownBag.EXTRA_BROWNBAG_ID);
         mBrownbag = BrownBagManager.getInstance().getBrownbagById(brownbagId);
 
         initializeViews();
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_discussion;
+    }
+
+    @Override
+    protected void setToolbar() {
+        super.setToolbar();
+        getSupportActionBar().setTitle(R.string.action_bar_title_dicussion);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void initializeViews() {

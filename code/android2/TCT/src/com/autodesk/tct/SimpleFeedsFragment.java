@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,7 +51,9 @@ public class SimpleFeedsFragment extends BaseFragment implements BrownBagsDownlo
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        layoutManager.setReverseLayout(true);
+        mRecyclerView.setLayoutManager(layoutManager);
 
         return rootView;
     }
@@ -65,7 +66,7 @@ public class SimpleFeedsFragment extends BaseFragment implements BrownBagsDownlo
         setRetainInstance(true);
 
         // Set toolbar title
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.actionbar_title_feeds);
+        setActionBarTitle(R.string.actionbar_title_feeds);
 
         mAdapter = new SimpleBrownBagAdapter();
         mAdapter.setBrownBags(BrownBagManager.getInstance().getAllBrownBags());
@@ -76,8 +77,7 @@ public class SimpleFeedsFragment extends BaseFragment implements BrownBagsDownlo
 
         BrownBagManager.getInstance().setOnBrownBagsDownloadListener(this);
 
-        // initiate the loader to do the background work
-        // getLoaderManager().initLoader(0, null, this);
+
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -90,7 +90,7 @@ public class SimpleFeedsFragment extends BaseFragment implements BrownBagsDownlo
     @Override
     public void onFragmentResume() {
         // Set toolbar title
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.actionbar_title_feeds);
+        setActionBarTitle(R.string.actionbar_title_feeds);
     }
 
     private void pullToRefresh() {
@@ -99,7 +99,13 @@ public class SimpleFeedsFragment extends BaseFragment implements BrownBagsDownlo
 
     @Override
     public void onAllBrownBagsDownloaded() {
+        mSwipeRefreshLayout.setRefreshing(false);
         mAdapter.setBrownBags(BrownBagManager.getInstance().getAllBrownBags());
+        mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+    }
+
+    @Override
+    public void onBrownBagsDownloadFailed() {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

@@ -6,10 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,27 +20,31 @@ import com.autodesk.tct.brownbag.BrownBag;
 import com.autodesk.tct.brownbag.BrownBagManager;
 
 
-public class SpeakerActivity extends AppCompatActivity {
+public class SpeakerActivity extends BaseActivity {
     private String mBrownbagId;
     private GridView mGridView;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_speaker);
 
         mBrownbagId = getIntent().getStringExtra(BrownBag.EXTRA_BROWNBAG_ID);
         BrownBag brownbag = BrownBagManager.getInstance().getBrownbagById(mBrownbagId);
 
-        // set Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        initializeViews(brownbag);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_speaker;
+    }
+
+    @Override
+    protected void setToolbar() {
+        super.setToolbar();
         getSupportActionBar().setTitle(R.string.action_bar_title_speaker);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        initializeViews(brownbag);
-    	
     }
 
     private void initializeViews(BrownBag brownbag) {
@@ -62,17 +63,6 @@ public class SpeakerActivity extends AppCompatActivity {
                 gotoUserProfile(user.getId());
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void gotoUserProfile(String userId) {

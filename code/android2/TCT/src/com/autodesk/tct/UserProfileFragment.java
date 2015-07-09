@@ -2,7 +2,6 @@ package com.autodesk.tct;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,9 +21,16 @@ public class UserProfileFragment extends BaseFragment {
 
     private User mUser;
 
+    public UserProfileFragment() {
+    }
+
     public UserProfileFragment(User user) {
+        setUser(user);
+    }
+
+    public void setUser(User user) {
         mUser = user;
-	}
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,9 @@ public class UserProfileFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        if (mUser == null) {
+            return null;
+        }
         View rootView = inflater.inflate(R.layout.fragment_userprofile, container, false);
 
         TextView avatarView = (TextView) rootView.findViewById(R.id.avatar_view);
@@ -72,7 +81,7 @@ public class UserProfileFragment extends BaseFragment {
 
     @Override
     public void onFragmentResume() {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.action_bar_title_userprofile);
+        setActionBarTitle(R.string.action_bar_title_userprofile);
     }
 
     @Override

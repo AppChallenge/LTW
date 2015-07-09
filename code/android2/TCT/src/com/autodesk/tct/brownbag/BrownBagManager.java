@@ -3,22 +3,19 @@ package com.autodesk.tct.brownbag;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.android.common.logger.Log;
 import com.autodesk.tct.server.ServerUtil;
-import com.autodesk.tct.util.AsyncTaskHelper;
-import com.autodesk.tct.util.NetworkUtility;
-import com.autodesk.tct.util.Utility;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class BrownBagManager {
 
     public interface BrownBagsDownloadListener {
         void onAllBrownBagsDownloaded();
+
+        void onBrownBagsDownloadFailed();
     }
 
     public interface BrownbagRegisterHandler {
@@ -53,8 +50,6 @@ public class BrownBagManager {
 
     private static BrownBagManager sInstance = null;
     
-    private Context mContext;
-    private DownloadBrownBagTask mDownloadBrownBagTask = null;
     private BrownBagsDownloadListener mBrownBagsDownloadListener = null;
     private BrownbagDetailResponseHandler mBrownbagDetailResponseHandler;
     private BrownbagRegisterHandler mBrownbagRegisterHandler;
@@ -69,10 +64,6 @@ public class BrownBagManager {
         }
 
         return sInstance;
-    }
-
-    public void initialize(Context context) {
-        mContext = context.getApplicationContext();
     }
 
     public void setOnBrownBagsDownloadListener(BrownBagsDownloadListener l) {
@@ -110,70 +101,53 @@ public class BrownBagManager {
     }
 
     public void downloadBrownBags() {
-        if (isDownloadingBrownBags()) {
-            return;
-        }
+        ServerUtil.downloadBrownbags(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                if (response == null) {
+                    return;
+                }
+                JSONArray brownbagObjs = response.optJSONArray(BROWNBAGS);
+                if (brownbagObjs == null) {
+                    return;
+                }
+                // Make sure this is a valid manifest.
+                List<BrownBag> brownBags = new ArrayList<BrownBag>();
+                for (int i = 0; i < brownbagObjs.length(); i++) {
+                    JSONObject brownbagObj = brownbagObjs.optJSONObject(i);
+                    BrownBag brownbag = BrownBag.fromJSONObject(brownbagObj);
+                    if (brownbag != null) {
+                        brownBags.add(brownbag);
+                    }
+                }
 
-        mDownloadBrownBagTask = new DownloadBrownBagTask();
-        AsyncTaskHelper.execute(mDownloadBrownBagTask);
-    }
-
-    private boolean isDownloadingBrownBags() {
-        return mDownloadBrownBagTask != null;
-    }
-
-    private void cancelDownloadBrownBags() {
-        if (mDownloadBrownBagTask != null) {
-            mDownloadBrownBagTask.cancel(true);
-            mDownloadBrownBagTask = null;
-        }
-    }
-
-    private class DownloadBrownBagTask extends AsyncTask<Void, Void, Void> {
-        List<BrownBag> mBrownBags;
-
-        @Override
-        protected void onPreExecute() {
-            Log.d(TAG, "DownloadBrownBagTask onPreExecute");
-            if (!NetworkUtility.isOnline(mContext)) {
-                cancelDownloadBrownBags();
+                setBrownBags(brownBags);
             }
-        }
 
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            Log.d(TAG, "DownloadBrownBagTask doInBackground");
-            if (isCancelled()) {
-                return null;
-            }
-            String jsonString = ServerUtil.downloadBrownbags();
-            JSONArray brownbagObjs = Utility.getJSONArray(jsonString, BROWNBAGS);
-            if (brownbagObjs == null) {
-                return null;
-            }
-            // Make sure this is a valid manifest.
-            mBrownBags = new ArrayList<BrownBag>();
-            for (int i = 0; i < brownbagObjs.length(); i++) {
-                JSONObject brownbagObj = brownbagObjs.optJSONObject(i);
-                BrownBag brownbag = BrownBag.fromJSONObject(brownbagObj);
-                if (brownbag != null) {
-                    mBrownBags.add(brownbag);
+            @Override
+            public void onFailure(int statusCode, Header[] headers,
+                    Throwable throwable, JSONObject error) {
+
+                if (mBrownBagsDownloadListener != null) {
+                    mBrownBagsDownloadListener.onBrownBagsDownloadFailed();
                 }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            Log.d(TAG, "DownloadBrownBagTask onPostExecute");
-            if (mBrownBags != null) {
-                setBrownBags(mBrownBags);
-                mBrownBags = null;
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (mBrownBagsDownloadListener != null) {
+                    mBrownBagsDownloadListener.onBrownBagsDownloadFailed();
+                }
             }
 
-            mDownloadBrownBagTask = null;
-        }
-
+            @Override
+            public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.Throwable throwable,
+                    org.json.JSONArray errorResponse) {
+                if (mBrownBagsDownloadListener != null) {
+                    mBrownBagsDownloadListener.onBrownBagsDownloadFailed();
+                }
+            }
+        });
     }
 
     private void setBrownBags(List<BrownBag> brownbags) {
