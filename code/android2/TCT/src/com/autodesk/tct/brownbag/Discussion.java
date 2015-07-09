@@ -3,6 +3,7 @@ package com.autodesk.tct.brownbag;
 import org.json.JSONObject;
 
 import com.autodesk.tct.authentication.User;
+import com.autodesk.tct.authentication.UserUtility;
 
 public class Discussion {
 
@@ -11,23 +12,24 @@ public class Discussion {
     public final static int BROWNBAG_OUTDATE = 2;
 
     private final static String ID = "id";
-    private final static String TITLE = "title";
     private final static String MESSAGE = "message";
-    private final static String TIME = "time";
-    private final static String END_TIME = "endtime";
-    private final static String LOCATION = "location";
-    private final static String STATUS = "status";
-    private final static String REGISTRATIONS = "brownbag-registrations";
+    private final static String POSTDATE = "postdate";
+    private final static String BROWNBAGID = "brownbagId";
+    private final static String USERID = "userId";
+    private final static String USER = "user";
 
     private final String mId;
     private final String mMessage;
+    private final String mPostTime;
+    private final String mBrownbagId;
+    private final User mPoster;
 
-    private User mPoster;
-
-    // private final Date m
-    public Discussion(String id, String message) {
+    public Discussion(String id, String message, String time, String brownbagId, User user) {
         mId = id;
         mMessage = message;
+        mPostTime = time;
+        mBrownbagId = brownbagId;
+        mPoster = user;
     }
 
     public static Discussion fromJSONObject(JSONObject obj) {
@@ -35,30 +37,42 @@ public class Discussion {
             return null;
         }
 
-        return null;
+        String id = obj.optString(ID);
+        String message = obj.optString(MESSAGE);
+        String time = obj.optString(POSTDATE);
+        String brownbagId = obj.optString(BROWNBAGID);
+        JSONObject userObj = obj.optJSONObject(USER);
+        User user = User.fromJSONObject(userObj);
 
-        // String id = obj.optString(ID);
-        // String title = obj.optString(TITLE);
-        // String description = obj.optString(DESCRIPTION);
-        // String startTime = obj.optString(START_TIME);
-        // String endTime = obj.optString(END_TIME);
-        // String location = obj.optString(LOCATION);
-        // int status = obj.optInt(STATUS);
-        //
-        // JSONArray regObjs = obj.optJSONArray(REGISTRATIONS);
-        // List<Registration> registrations = new ArrayList<Registration>();
-        // for (int i = 0; i < regObjs.length(); i++) {
-        // JSONObject regObj = regObjs.optJSONObject(i);
-        // Registration registration = Registration.fromJSONObject(regObj);
-        // if (registration != null) {
-        // registrations.add(registration);
-        // }
-        // }
-        //
-        // return new Discussion(id, title, description, startTime, endTime, location, status, registrations);
+        return new Discussion(id, message, time, brownbagId, user);
     }
 
     public String getID() {
         return mId;
+    }
+
+    public String getMessage() {
+        return mMessage;
+    }
+
+    public String getPostTime() {
+        return mPostTime;
+    }
+
+    public String getUserName() {
+        return mPoster != null ? mPoster.getName() : "Anonymous User";
+    }
+
+    public boolean isMyOwnReply() {
+        if (mPoster == null) {
+            return false;
+        }
+
+        String currentUserId = UserUtility.getCurrentUserId();
+        if (currentUserId != null && currentUserId.equals(mPoster.getId())) {
+            return true;
+        }
+
+        return false;
     }
 }

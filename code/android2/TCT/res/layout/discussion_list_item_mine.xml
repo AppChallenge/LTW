@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/discussion_item_margin_horizontal"
+    android:layout_marginRight="@dimen/discussion_item_margin_horizontal"
+    android:layout_marginTop="@dimen/discussion_item_margin_vertical"
+    android:orientation="horizontal"
+    android:elevation="2dp">
+    
+    <LinearLayout 		
+    	android:layout_width="0dp"
+    	android:layout_height="wrap_content"
+    	android:layout_weight="1"
+    	android:minHeight="@dimen/discussion_box_min_height"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/discussion_box_margin_left"
+    	android:padding="@dimen/list_item_padding"
+    	android:background="@drawable/feeds_headerview_bg"
+    	android:orientation="vertical">     
+    	  
+	    <TextView        
+	        android:id="@+id/poster_name"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="@style/Feeds.Item.Description.TextView" />       
+	    <TextView        
+	        android:id="@+id/item_message"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="@style/Feeds.Item.Title.TextView" />
+	    
+    </LinearLayout>
+ 
+    <ImageView 
+        android:id="@+id/item_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/avatar_2_small" />
+    
+</LinearLayout>

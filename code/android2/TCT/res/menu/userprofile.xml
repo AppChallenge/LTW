@@ -4,9 +4,10 @@
     tools:context="com.example.ss.MainActivity" >
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/menu_signout"
         android:orderInCategory="100"
-        android:title="search"
-        app:showAsAction="never"/>
+        android:title="@string/menu_signout"
+        android:icon="@drawable/topbar_search"
+        app:showAsAction="never" />
 
 </menu>

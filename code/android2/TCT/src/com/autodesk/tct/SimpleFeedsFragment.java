@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,6 +27,12 @@ public class SimpleFeedsFragment extends BaseFragment implements BrownBagsDownlo
     private SimpleBrownBagAdapter mAdapter;
 
     public SimpleFeedsFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -101,6 +109,12 @@ public class SimpleFeedsFragment extends BaseFragment implements BrownBagsDownlo
         Intent deatilIntent = new Intent(getActivity(), BrownbagDetailActivity.class);
         deatilIntent.putExtra(BrownBag.EXTRA_BROWNBAG_ID, brownbag.getID());
         startActivity(deatilIntent);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.feeds, menu);
     }
 
 }

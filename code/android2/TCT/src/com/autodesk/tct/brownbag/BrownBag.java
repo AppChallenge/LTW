@@ -1,12 +1,16 @@
 package com.autodesk.tct.brownbag;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.autodesk.tct.authentication.User;
+import com.autodesk.tct.authentication.UserUtility;
+import com.autodesk.tct.util.Utility;
 
 public class BrownBag {
 
@@ -77,6 +81,10 @@ public class BrownBag {
         return new BrownBag(id, title, description, startTime, endTime, location, status, registrations);
     }
 
+    public void appendRegistration(Registration reg) {
+        mRegistration.add(reg);
+    }
+
     public String getID() {
         return mId;
     }
@@ -89,8 +97,20 @@ public class BrownBag {
         return mDescription;
     }
 
+    public String getLocation() {
+        return mLocation;
+    }
+
+    public Date getStartDate() {
+        return Utility.getDateFromString(mStartTime);
+    }
+
+    public Date getEndDate() {
+        return Utility.getDateFromString(mEndTime);
+    }
+
     public String getDateString() {
-        return mStartTime + "-" + mEndTime;
+        return Utility.getDisplayDateString(mStartTime) + "-" + Utility.getDisplayDateString(mEndTime);
     }
 
     public User getSpeakerById(String id) {
@@ -115,6 +135,16 @@ public class BrownBag {
         return speakers;
     }
 
+    public List<User> getRegisteredUsers() {
+        List<User> users = new ArrayList<User>();
+        for (Registration registration : mRegistration) {
+            if (!registration.isSpeaker()) {
+                users.add(registration.getUser());
+            }
+        }
+        return users;
+    }
+
     public String getSpeakersName() {
         String names = "Speakers: ";
         for(Registration registration : mRegistration) {
@@ -130,6 +160,41 @@ public class BrownBag {
     }
 
     public boolean isAllowToRegister() {
-        return true;
+        return !isOutOfDate() && !isCurrentUserSpeaker() && !hasCurrentUserRegistered();
+    }
+
+    public boolean isOutOfDate() {
+        Date startTime = Utility.getDateFromString(mStartTime);
+        return new Date().after(startTime);
+    }
+
+    public boolean isCurrentUserSpeaker() {
+        User currentUser = UserUtility.getCurrentUser();
+        List<User> speakers = getSpeakers();
+        for (User speaker : speakers) {
+            if (speaker.getId().equals(currentUser.getId())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean hasCurrentUserRegistered() {
+        User currentUser = UserUtility.getCurrentUser();
+        List<User> speakers = getRegisteredUsers();
+        for (User speaker : speakers) {
+            if (speaker.getId().equals(currentUser.getId())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public long getDuration() {
+        Date startTime = Utility.getDateFromString(mStartTime);
+        Date endTime = Utility.getDateFromString(mEndTime);
+        return Utility.getDateDiff(startTime, endTime, TimeUnit.MINUTES);
     }
 }

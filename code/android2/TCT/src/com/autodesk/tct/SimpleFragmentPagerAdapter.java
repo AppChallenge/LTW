@@ -13,27 +13,28 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
     private final static int[] TAB_ICON_RESOUCE = {
             R.drawable.level_1_headline, R.drawable.level_1_bbsall, R.drawable.level_1_userprofile
     };
-    private final static BaseFragment[] FRAGMENTS = {
-            new SimpleFeedsFragment(),
-            new BBSFragment(),
-            new UserProfileFragment(UserUtility.getCurrentUser())
-            };
+    private BaseFragment[] mFragments = new BaseFragment[3];
 
     private Context mContext;
 
     public SimpleFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        mContext = context;
+        mContext = context; 
+        mFragments = new BaseFragment[] {
+                new SimpleFeedsFragment(),
+                new BBSFragment(),
+                new UserProfileFragment(UserUtility.getCurrentUser())
+                };
     }
 
     @Override
     public int getCount() {
-        return FRAGMENTS.length;
+        return mFragments.length;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return FRAGMENTS[position];
+        return mFragments[position];
     }
 
     // This method doesn't work.

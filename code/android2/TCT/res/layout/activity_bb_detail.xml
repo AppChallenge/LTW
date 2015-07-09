@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -23,6 +23,7 @@
                 style="@style/BrownbagDetailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="0dp"
                 android:orientation="vertical" >
 
                 <TextView
@@ -30,17 +31,27 @@
                     style="@style/Feeds.Item.Title.TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/list_item_divider_height"
+                    android:layout_marginLeft="@dimen/detail_dateview_margin"
                     android:background="@color/color_text_primary"
-                    android:padding="8dp"
+                    android:padding="@dimen/list_item_padding"
                     android:textColor="#FFFFFFFF" />
 
                 <TextView
                     android:id="@+id/item_title"
                     style="@style/Feeds.Item.Title.TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/detail_textview_margin" />
             </LinearLayout>
+            
+            <ImageView 
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="@dimen/detail_item_margin"
+                android:layout_marginRight="@dimen/detail_item_margin"
+                android:layout_marginTop="@dimen/detail_divider_margin"
+                android:layout_marginBottom="@dimen/detail_divider_margin"
+                android:background="@color/color_text_primary"/>
 
             <LinearLayout
                 style="@style/BrownbagDetailLayout"
@@ -58,7 +69,9 @@
                     android:id="@+id/item_summary"
                     style="@style/Feeds.Item.Title.TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/detail_textview_margin"
+                    android:layout_marginBottom="@dimen/detail_textview_margin" />
             </LinearLayout>
 
             <LinearLayout
@@ -74,12 +87,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginTop="@dimen/detail_textview_margin"
+                    android:layout_marginBottom="@dimen/detail_textview_margin"
                     android:text="@string/bb_speakers" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription=">>>" />
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/arrow_next" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,12 +110,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginTop="@dimen/detail_textview_margin"
+                    android:layout_marginBottom="@dimen/detail_textview_margin"
                     android:text="@string/bb_materials" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription=">>>" />
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/arrow_next" />
             </LinearLayout>
 
             <LinearLayout
@@ -114,12 +133,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginTop="@dimen/detail_textview_margin"
+                    android:layout_marginBottom="@dimen/detail_textview_margin"
                     android:text="@string/bb_discussion" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription=">>>" />
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/arrow_next" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -133,8 +155,10 @@
         android:layout_gravity="bottom|end|right"
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="@string/action_register"
+        android:src="@drawable/register"
         app:elevation="6dp"
-        app:pressedTranslationZ="12dp" />
+        app:pressedTranslationZ="12dp"
+        android:visibility="invisible" />
     
     <ProgressBar 
         android:id="@+id/progressbar"

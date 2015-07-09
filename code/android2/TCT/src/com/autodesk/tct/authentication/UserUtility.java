@@ -12,4 +12,12 @@ public class UserUtility {
         User user = getCurrentUser();
         return user != null ? user.getId() : null;
     }
+
+    public static boolean isCurrentUser(User user) {
+        return getCurrentUser().getId().equals(user.getId());
+    }
+
+    public static void signout() {
+        ServerUtil.signout();
+    }
 }

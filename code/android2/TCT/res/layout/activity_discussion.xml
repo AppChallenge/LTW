@@ -2,21 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
- 
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
-    
+
     <LinearLayout
         android:id="@+id/brownbag_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@drawable/feeds_headerview_bg"
         android:orientation="vertical"
         android:paddingBottom="@dimen/list_header_padding"
         android:paddingLeft="@dimen/list_header_padding"
-        android:paddingRight="@dimen/list_header_padding"
-        android:layout_marginTop="?attr/actionBarSize" >
+        android:paddingRight="@dimen/list_header_padding" >
 
         <TextView
             android:id="@+id/item_type"
@@ -35,11 +35,34 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/input_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/theme_bottombar_bg_color" >
+
+        <EditText
+            android:id="@+id/input_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="@dimen/discussion_inputbox_max_height"
+            android:layout_marginBottom="@dimen/discussion_inputbox_margin_vertical"
+            android:layout_marginLeft="@dimen/discussion_inputbox_margin_horizontal"
+            android:layout_marginRight="@dimen/discussion_inputbox_margin_horizontal"
+            android:layout_marginTop="@dimen/discussion_inputbox_margin_vertical"
+            android:background="@drawable/register_edit_text_bg_normal"
+            android:imeOptions="actionSend"
+    		android:inputType="text"
+            android:padding="@dimen/login_item_padding" />
+    </FrameLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/brownbag_header" >
+        android:layout_below="@id/brownbag_header"
+        android:layout_above="@id/input_group" >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/discussion_list"

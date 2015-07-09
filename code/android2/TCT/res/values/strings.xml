@@ -47,5 +47,9 @@
     <string name="profile_email_address">Email:</string>
     <string name="profile_title">Title:</string>
     <string name="profile_topic">Topics:</string>
+    
+    <!-- action bar menus -->
+    <string name="menu_search">Search</string>
+    <string name="menu_signout">Sign out</string>
 
 </resources>

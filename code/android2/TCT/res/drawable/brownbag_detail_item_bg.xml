@@ -4,6 +4,5 @@
 
     <solid android:color="@color/bb_detail_bg_color" />
 
-    <corners android:radius="2dp" />
 
 </shape>

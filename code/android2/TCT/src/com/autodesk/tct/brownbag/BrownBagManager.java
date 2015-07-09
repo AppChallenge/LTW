@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -14,6 +13,7 @@ import com.android.common.logger.Log;
 import com.autodesk.tct.server.ServerUtil;
 import com.autodesk.tct.util.AsyncTaskHelper;
 import com.autodesk.tct.util.NetworkUtility;
+import com.autodesk.tct.util.Utility;
 
 public class BrownBagManager {
 
@@ -35,6 +35,18 @@ public class BrownBagManager {
         void onBrownbagDetailReceivedFailed();
     }
 
+    public interface DownloadBrownbagDiscussionHandler {
+        void onBrownbagDiccussionsReceivedSucceed(List<Discussion> discussions);
+
+        void onBrownbagDiccussionsReceivedFailed();
+    }
+
+    public interface BrownbagDiscussionPostHandler {
+        void onBrownbagDiscussionPostSucceed(Discussion discussion);
+
+        void onBrownbagDiscussionPostFailed();
+    }
+
     private final static String TAG = "BrownBagManager";
     private final static String BROWNBAGS = "brownbags";
 
@@ -46,6 +58,8 @@ public class BrownBagManager {
     private BrownBagsDownloadListener mBrownBagsDownloadListener = null;
     private BrownbagDetailResponseHandler mBrownbagDetailResponseHandler;
     private BrownbagRegisterHandler mBrownbagRegisterHandler;
+    private DownloadBrownbagDiscussionHandler mDownloadBrownbagDiscussionHandler;
+    private BrownbagDiscussionPostHandler mBrownbagDiscussionPostHandler;
 
     private List<BrownBag> mBrownBags = new ArrayList<BrownBag>();
 
@@ -58,7 +72,7 @@ public class BrownBagManager {
     }
 
     public void initialize(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     public void setOnBrownBagsDownloadListener(BrownBagsDownloadListener l) {
@@ -71,6 +85,14 @@ public class BrownBagManager {
 
     public void setBrownbagRegisterHander(BrownbagRegisterHandler handler) {
         mBrownbagRegisterHandler = handler;
+    }
+
+    public void setDownloadBrownbagDiscussionHandler(DownloadBrownbagDiscussionHandler handler) {
+        mDownloadBrownbagDiscussionHandler = handler;
+    }
+    
+    public void setBrownbagDiscussionPostHandler(BrownbagDiscussionPostHandler handler) {
+        mBrownbagDiscussionPostHandler = handler;
     }
 
     public List<BrownBag> getAllBrownBags() {
@@ -125,7 +147,7 @@ public class BrownBagManager {
                 return null;
             }
             String jsonString = ServerUtil.downloadBrownbags();
-            JSONArray brownbagObjs = getJSONArray(jsonString, BROWNBAGS);
+            JSONArray brownbagObjs = Utility.getJSONArray(jsonString, BROWNBAGS);
             if (brownbagObjs == null) {
                 return null;
             }
@@ -162,27 +184,20 @@ public class BrownBagManager {
         }
     }
 
-    public static JSONArray getJSONArray(String profile, String name) {
-        if (profile == null) {
-            return null;
-        }
-
-        JSONArray objects = null;
-        try {
-            JSONObject objResult = new JSONObject(profile);
-            objects = objResult.getJSONArray(name);
-        } catch (JSONException e) {
-            Log.w(TAG, e.getLocalizedMessage());
-        }
-        return objects;
-    }
-
     public void registerABrownBag(String brownbagId) {
         ServerUtil.registerBrownbag(brownbagId, mBrownbagRegisterHandler);
     }
 
     public void getBrownbagDetail(String brownbagId) {
         ServerUtil.getBrownbagDetail(brownbagId, mBrownbagDetailResponseHandler);
+    }
+
+    public void getBrownbagDiscussions(String brownbagId) {
+        ServerUtil.getBrownbagDiscussions(brownbagId, mDownloadBrownbagDiscussionHandler);
+    }
+    
+    public void postBrownbagDiscussion(String brownbagId, String message) {
+        ServerUtil.postBrownbagDiscussion(brownbagId, message, mBrownbagDiscussionPostHandler);
     }
 
 }

@@ -1,7 +1,9 @@
 package com.autodesk.tct.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -23,6 +25,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,10 +33,16 @@ import android.content.Context;
 import android.util.Log;
 
 import com.autodesk.tct.authentication.User;
+import com.autodesk.tct.authentication.UserUtility;
 import com.autodesk.tct.brownbag.BrownBag;
 import com.autodesk.tct.brownbag.BrownBagManager.BrownbagDetailResponseHandler;
+import com.autodesk.tct.brownbag.BrownBagManager.BrownbagDiscussionPostHandler;
 import com.autodesk.tct.brownbag.BrownBagManager.BrownbagRegisterHandler;
+import com.autodesk.tct.brownbag.BrownBagManager.DownloadBrownbagDiscussionHandler;
+import com.autodesk.tct.brownbag.Discussion;
+import com.autodesk.tct.brownbag.Registration;
 import com.autodesk.tct.storage.PreferencesUtil;
+import com.autodesk.tct.util.Utility;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -166,12 +175,12 @@ public class ServerUtil {
 	 * TODO: not test
 	 */
 	public static void signout() {
-		clearUserInfo();
-		
 		String url = getServerUrl() + "/logout";
 		delete(sApplicationContext, url, null, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, org.apache.http.Header[] headers, JSONObject response) {
+                sUser = null;
+                clearUserInfo();
             }
         });
 	}
@@ -181,6 +190,7 @@ public class ServerUtil {
 		RequestParams params = new RequestParams();
 		params.put("brownbagId", brownbagId);
 		params.put("userId", sUser.getId());
+        params.put("role", Registration.Role.Audience.toString());
 		post(url, params, new JsonHttpResponseHandler() {
 			@Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -329,6 +339,102 @@ public class ServerUtil {
         }
         return resultStr;
     }
+
+    public static void getBrownbagDiscussions(final String brownbagId, final DownloadBrownbagDiscussionHandler handler) {
+        String url = getServerUrl() + "/brownbag-discussions/get-brownbag-discussions?access_token=" + sSessionToken;
+        RequestParams params = new RequestParams();
+        params.put("brownbagId", brownbagId);
+        post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("TCT", "registerBrownbag return success!");
+
+                if (response != null) {
+                    try {
+                        JSONArray array = response.getJSONArray("success");
+                        List<Discussion> discussions = new ArrayList<Discussion>();
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+                            Discussion discussion = Discussion.fromJSONObject(obj);
+                            discussions.add(discussion);
+                        }
+                        onBrownbagDiccussionsReceivedSucceed(discussions, handler);
+                        return;
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+
+                onBrownbagDiccussionsReceivedFailed(handler);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers,
+                    Throwable throwable, JSONObject error) {
+                Log.d("TCT", "registerBrownbag fail!");
+                onBrownbagDiccussionsReceivedFailed(handler);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("TCT", "registerBrownbag fail!");
+                onBrownbagDiccussionsReceivedFailed(handler);
+            }
+
+            @Override
+            public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.Throwable throwable,
+                    org.json.JSONArray errorResponse) {
+                Log.d("TCT", "registerBrownbag fail!");
+                onBrownbagDiccussionsReceivedFailed(handler);
+            }
+        });
+    }
+
+    public static void postBrownbagDiscussion(final String brownbagId, final String message,
+            final BrownbagDiscussionPostHandler handler) {
+        String url = getServerUrl() + "/brownbag-discussions?access_token=" + sSessionToken;
+        RequestParams params = new RequestParams();
+        params.put("brownbagId", brownbagId);
+        params.put("userId", UserUtility.getCurrentUserId());
+        params.put("message", message);
+        params.put("postdate", Utility.getCurrentDateString());
+        post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("TCT", "post a reply succeed!");
+
+                if (response != null) {
+                    String id = response.optString("id");
+                    String time = response.optString("postdate");
+                    Discussion discussion = new Discussion(id, message, time, brownbagId, UserUtility.getCurrentUser());
+                    onBrownbagDiscussionPostSucceed(discussion, handler);
+                } else {
+                    onBrownbagDiscussionPostFailed(handler);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers,
+                    Throwable throwable, JSONObject error) {
+                Log.d("TCT", "post a reply fail!");
+                onBrownbagDiscussionPostFailed(handler);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("TCT", "post a reply fail!");
+                onBrownbagDiscussionPostFailed(handler);
+            }
+
+            @Override
+            public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.Throwable throwable,
+                    org.json.JSONArray errorResponse) {
+                Log.d("TCT", "post a reply fail!");
+                onBrownbagDiscussionPostFailed(handler);
+            }
+        });
+    }
 		
     private static void get(Context context, String url, Header[] headers, RequestParams params,
             AsyncHttpResponseHandler responseHandler) {
@@ -373,7 +479,34 @@ public class ServerUtil {
         }
     }
 
+    private static void onBrownbagDiccussionsReceivedSucceed(List<Discussion> discussions,
+            DownloadBrownbagDiscussionHandler handler) {
+        if (handler != null) {
+            handler.onBrownbagDiccussionsReceivedSucceed(discussions);
+        }
+    }
+
+    private static void onBrownbagDiccussionsReceivedFailed(DownloadBrownbagDiscussionHandler handler) {
+        if (handler != null) {
+            handler.onBrownbagDiccussionsReceivedFailed();
+        }
+    }
+
+    private static void onBrownbagDiscussionPostSucceed(Discussion discussion,
+            BrownbagDiscussionPostHandler handler) {
+        if (handler != null) {
+            handler.onBrownbagDiscussionPostSucceed(discussion);
+        }
+    }
+
+    private static void onBrownbagDiscussionPostFailed(BrownbagDiscussionPostHandler handler) {
+        if (handler != null) {
+            handler.onBrownbagDiscussionPostFailed();
+        }
+    }
+
     private static void onSignSucceed(boolean userTrigger) {
+
     	if(sSignHandler != null) {
     		sSignHandler.onSignSucceed(userTrigger);;
     	}

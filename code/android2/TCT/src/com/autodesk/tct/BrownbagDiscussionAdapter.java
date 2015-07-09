@@ -15,12 +15,10 @@ import android.widget.TextView;
 import com.autodesk.tct.brownbag.Discussion;
 
 public class BrownbagDiscussionAdapter extends RecyclerView.Adapter<ViewHolder> {
-
-    private final static int INVALID_POSITION = -1;
+    private final static int DISCUSSION_TYPE_MINE = 0;
+    private final static int DISCUSSION_TYPE_OTHERS = 1;
 
     private List<Discussion> mDiscussions = new ArrayList<Discussion>();
-
-    private int mCurrentExpandedPosition = INVALID_POSITION;
 
     public BrownbagDiscussionAdapter(List<Discussion> discussions) {
         setDiscussions(discussions);
@@ -30,6 +28,12 @@ public class BrownbagDiscussionAdapter extends RecyclerView.Adapter<ViewHolder> 
         mDiscussions = new ArrayList<Discussion>();
         mDiscussions.addAll(discussions);
         notifyDataSetChanged();
+    }
+
+    public void appendDiscussion(Discussion discussion) {
+        int position = mDiscussions.size() - 1;
+        mDiscussions.add(discussion);
+        notifyItemInserted(mDiscussions.size() - 1);
     }
 
     @Override
@@ -42,30 +46,44 @@ public class BrownbagDiscussionAdapter extends RecyclerView.Adapter<ViewHolder> 
     }
 
     @Override
+    public int getItemViewType(int position) {
+        Discussion discussion = getItem(position);
+        if (discussion.isMyOwnReply()) {
+            return DISCUSSION_TYPE_MINE;
+        } else {
+            return DISCUSSION_TYPE_OTHERS;
+        }
+    }
+
+    @Override
     public void onBindViewHolder(ViewHolder arg0, int position) {
-        int viewType = getItemViewType(position);
         final Discussion discussion = getItem(position);
         ItemViewHolder viewHolder = (ItemViewHolder) arg0;
-        // viewHolder.mTitleTextView.setText(brownBag.getTitle());
-        // viewHolder.mDescriptionTextView.setText(brownBag.getDescription());
+        viewHolder.mNameTextView.setText(discussion.getUserName());
+        viewHolder.mMessageTextView.setText(discussion.getMessage());
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_list_item, parent, false);
+        View v = null;
+        if (viewType == DISCUSSION_TYPE_MINE) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.discussion_list_item_mine, parent, false);
+        } else {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.discussion_list_item, parent, false);
+        }
         return new ItemViewHolder(v);
     }
 
     class ItemViewHolder extends ViewHolder {
-        ImageView mLogoImageView;
-        TextView mTitleTextView;
-        TextView mDescriptionTextView;
+        ImageView mAvatarImageView;
+        TextView mNameTextView;
+        TextView mMessageTextView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            mLogoImageView = (ImageView) itemView.findViewById(R.id.item_logo);
-            mTitleTextView = (TextView) itemView.findViewById(R.id.item_title);
-            mDescriptionTextView = (TextView) itemView.findViewById(R.id.item_description);
+            mAvatarImageView = (ImageView) itemView.findViewById(R.id.item_avatar);
+            mNameTextView = (TextView) itemView.findViewById(R.id.poster_name);
+            mMessageTextView = (TextView) itemView.findViewById(R.id.item_message);
         }
 
     }

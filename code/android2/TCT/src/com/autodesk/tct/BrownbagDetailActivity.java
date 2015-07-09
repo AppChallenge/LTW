@@ -4,19 +4,25 @@ package com.autodesk.tct;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.autodesk.tct.authentication.UserUtility;
 import com.autodesk.tct.brownbag.BrownBag;
 import com.autodesk.tct.brownbag.BrownBagManager;
 import com.autodesk.tct.brownbag.BrownBagManager.BrownBagsDownloadListener;
 import com.autodesk.tct.brownbag.BrownBagManager.BrownbagDetailResponseHandler;
 import com.autodesk.tct.brownbag.BrownBagManager.BrownbagRegisterHandler;
+import com.autodesk.tct.brownbag.Registration;
+import com.autodesk.tct.brownbag.Registration.Role;
 import com.autodesk.tct.widget.CustomAlertDialog;
 import com.autodesk.tct.widget.CustomAlertDialog.AlertDialogListener;
 
@@ -42,6 +48,7 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.action_bar_title_brownbag);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         initializeViews();
@@ -57,6 +64,17 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
             BrownBagManager.getInstance().getBrownbagDetail(mBrownbagId);
         }
         BrownBagManager.getInstance().setBrownbagRegisterHander(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeViews() {
@@ -119,6 +137,28 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
         mTitleView.setText(mBrownbag.getTitle());
         mSummaryView.setText(mBrownbag.getDescription());
         mSpeakersView.setText(mBrownbag.getSpeakersName());
+        
+        if (mBrownbag.isAllowToRegister()) {
+            mRegisterBtn.setVisibility(View.VISIBLE);
+        } else {
+            mRegisterBtn.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideRegisterButton() {
+        mRegisterBtn.setVisibility(View.INVISIBLE);
+    }
+
+    private void writeToCalendar() {
+        Intent intent = new Intent(Intent.ACTION_EDIT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.putExtra(Events.TITLE, mBrownbag.getTitle());
+        intent.putExtra(Events.DESCRIPTION, mBrownbag.getDescription());
+        intent.putExtra(Events.EVENT_LOCATION, mBrownbag.getLocation());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, mBrownbag.getStartDate().getTime());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, mBrownbag.getEndDate().getTime());
+        intent.putExtra(Events.ALL_DAY, true);
+        startActivity(intent);
     }
 
     @Override
@@ -135,18 +175,23 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
         // return;
         // }
 
+        Registration reg = new Registration(mBrownbag.getID(), UserUtility.getCurrentUser(), Role.Audience);
+        mBrownbag.appendRegistration(reg);
+
         mProgressBar.setVisibility(View.GONE);
         CustomAlertDialog.getInstance().setMessage(R.string.msg_register_success);
         CustomAlertDialog.getInstance().setButton(R.string.addToMyCalender, R.string.isee, new AlertDialogListener() {
 
             @Override
             public void onDialogPositiveBtnClicked(DialogFragment dialog) {
-
+                hideRegisterButton();
+                writeToCalendar();
                 dialog.dismiss();
             }
 
             @Override
             public void onDialogNegtiveBtnClicked(DialogFragment dialog) {
+                hideRegisterButton();
                 dialog.dismiss();
             }
 
@@ -161,18 +206,23 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
         // return;
         // }
 
+        Registration reg = new Registration(mBrownbag.getID(), UserUtility.getCurrentUser(), Role.Audience);
+        mBrownbag.appendRegistration(reg);
+
         mProgressBar.setVisibility(View.GONE);
         CustomAlertDialog.getInstance().setMessage(R.string.msg_register_waiting);
         CustomAlertDialog.getInstance().setButton(R.string.addToMyCalender, R.string.isee, new AlertDialogListener() {
 
             @Override
             public void onDialogPositiveBtnClicked(DialogFragment dialog) {
-
+                hideRegisterButton();
+                writeToCalendar();
                 dialog.dismiss();
             }
 
             @Override
             public void onDialogNegtiveBtnClicked(DialogFragment dialog) {
+                hideRegisterButton();
                 dialog.dismiss();
             }
 
@@ -189,7 +239,6 @@ public class BrownbagDetailActivity extends AppCompatActivity implements BrownBa
 
             @Override
             public void onDialogPositiveBtnClicked(DialogFragment dialog) {
-
                 dialog.dismiss();
             }
 
