@@ -190,7 +190,7 @@ public class ServerUtil {
 		RequestParams params = new RequestParams();
 		params.put("brownbagId", brownbagId);
 		params.put("userId", sUser.getId());
-        params.put("role", Registration.Role.Audience.toString());
+        params.put("role", Registration.ROLE_AUDIENCE);
 		post(url, params, new JsonHttpResponseHandler() {
 			@Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

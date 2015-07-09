@@ -18,7 +18,7 @@ public class Registration {
     private final static String USER = "user";
 
     private final static String ROLE_SPEAKER = "speaker";
-    private final static String ROLE_AUDIENCE = "audience";
+    public final static String ROLE_AUDIENCE = "audience";
 
     private final String mBrownbagId;
     private final User mUser;
