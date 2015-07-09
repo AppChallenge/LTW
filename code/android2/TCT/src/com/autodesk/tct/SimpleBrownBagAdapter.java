@@ -3,14 +3,11 @@ package com.autodesk.tct;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,14 +59,6 @@ public class SimpleBrownBagAdapter extends RecyclerView.Adapter<ViewHolder> {
             final HeaderViewHolder viewHolder = (HeaderViewHolder) arg0;
             viewHolder.mTitleTextView.setText(brownBag.getTitle());
             viewHolder.mTypeTextView.setText("TCT BrownBag");
-            viewHolder.mRegisterBtn.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-                }
-
-            });
 
         } else if (viewType == ITEM_VIEW_TYPE_FOOTER) {
 
@@ -116,18 +105,13 @@ public class SimpleBrownBagAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     class HeaderViewHolder extends ViewHolder {
-        ViewPager mViewPager;
         TextView mTitleTextView;
         TextView mTypeTextView;
-        Button mRegisterBtn;
 
         public HeaderViewHolder(View view) {
             super(view);
-            mViewPager = (ViewPager) view.findViewById(R.id.item_viewPager);
-            mViewPager.setAdapter(new SwipeItemPagerAdapter());
             mTypeTextView = (TextView) view.findViewById(R.id.item_type);
             mTitleTextView = (TextView) view.findViewById(R.id.item_title);
-            mRegisterBtn = (Button) view.findViewById(R.id.register_action);
 
             // Perhaps the first most crucial part. The ViewPager loses its width information when it is put
             // inside a RecyclerView. It needs to be explicitly resized, in this case to the width of the
